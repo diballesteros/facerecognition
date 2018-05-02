@@ -11,6 +11,8 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import 'tachyons';
 
+
+//React Particles object that contains properties for the background
 const particlesOptions = {
   particles: {
     line_linked: {
@@ -23,12 +25,14 @@ const particlesOptions = {
   }
 }
 
+//API key for Clarifai
 const app = new Clarifai.App({
   apiKey: 'b0eba45ad8124cec86a3b34bef94a688'
 });
 
 class App extends Component {
 
+  //State: Manages the input of the image url, the image url itself, the coordinates of the facebox, route determines the page, and isSignedIn to determine the login status
   state = {
     input: '',
     imageUrl: '',
@@ -37,6 +41,7 @@ class App extends Component {
     isSignedIn: false
   }
 
+  //using the outputs provided by the API, first get the width and height of the image and calculate the columns and rows to fill out the facebox
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
@@ -52,16 +57,20 @@ class App extends Component {
 
   }
 
+  // After recieving the image set the state and coordinates of the facebox
   displayFaceBox = (box) => {
     console.log(box);
     this.setState({ box: box });
   }
 
+  //Pass in value of input field into respective state
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   }
 
   //https://cdn2.goabroad.com/images/program_content/5-tips-for-teaching-english-abroad-as-a-person-of-color-2-1462426680.jpg
+
+  // Upon submitting URL use clarifai API method to receive facebox coordinates
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
     app.models
@@ -72,6 +81,7 @@ class App extends Component {
       .catch(err => console.log(err));
   }
 
+  // Route pages depending on what is clicked and sent in
   onRouteChange = (route) => {
     if (route === 'signout') {
       this.setState({ isSignedIn: false })
@@ -82,9 +92,11 @@ class App extends Component {
   }
 
   render() {
+    // Destructure state
    const  { isSignedIn, imageUrl, route, box } = this.state;
 
     return (
+      //Navigation has properties pertaining to route and login status
       <div className="App">
         <Particles className='particles'
           params={particlesOptions}
