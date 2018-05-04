@@ -5,7 +5,6 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
-import Clarifai from 'clarifai';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
@@ -25,10 +24,7 @@ const particlesOptions = {
   }
 }
 
-//API key for Clarifai
-const app = new Clarifai.App({
-  apiKey: 'b0eba45ad8124cec86a3b34bef94a688'
-});
+
 
 const initialState = {
   input: '',
@@ -104,13 +100,17 @@ class App extends Component {
 
   //https://cdn2.goabroad.com/images/program_content/5-tips-for-teaching-english-abroad-as-a-person-of-color-2-1462426680.jpg
 
-  // Upon submitting URL use clarifai API method to receive facebox coordinates
+  // Upon submitting URL use clarifai API method from the BACKEND to receive facebox coordinates
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+      .then(response => response.json())
       .then(response => {
         if (response) {
           fetch('http://localhost:3000/image', {
