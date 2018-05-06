@@ -103,7 +103,7 @@ class App extends Component {
   // Upon submitting URL use clarifai API method from the BACKEND to receive facebox coordinates
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch('https://arcane-savannah-46733.herokuapp.com:3000/imageurl', {
+    fetch('https://arcane-savannah-46733.herokuapp.com/imageurl', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
